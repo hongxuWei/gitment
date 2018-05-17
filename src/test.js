@@ -1,7 +1,5 @@
 var Gitment = Gitment || require('./gitment')
 
-const config = window.config
-
 if (!config) {
   throw new Error('You need your own config to run this test.')
 }

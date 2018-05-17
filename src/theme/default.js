@@ -66,14 +66,14 @@ function renderComments({ meta, comments, commentReactions, currentPage, user, e
       const initHint = document.createElement('div')
       const initButton = document.createElement('button')
       initButton.className = 'gitment-comments-init-btn'
-      initButton.onclick = () => {
-        initButton.setAttribute('disabled', true)
-        instance.init()
-          .catch(e => {
-            initButton.removeAttribute('disabled')
-            alert(e)
-          })
-      }
+      initButton.setAttribute('disabled', true)
+      // auto init
+      instance.init()
+      .catch(e => {
+        initButton.removeAttribute('disabled')
+        alert(e)
+      })
+
       initButton.innerText = 'Initialize Comments'
       initHint.appendChild(initButton)
       errorBlock.appendChild(initHint)
@@ -245,9 +245,6 @@ function renderEditor({ user, error }, instance) {
       </div>
     </div>
     <div class="gitment-editor-footer">
-      <a class="gitment-editor-footer-tip" href="https://guides.github.com/features/mastering-markdown/" target="_blank">
-        Styling with Markdown is supported
-      </a>
       <button class="gitment-editor-submit" title="${disabledTip}" ${shouldDisable}>Comment</button>
     </div>
   `
@@ -299,6 +296,10 @@ function renderEditor({ user, error }, instance) {
 
   const submitButton = container.querySelector('.gitment-editor-submit')
   submitButton.onclick = () => {
+    if(textarea.value.length === 0){
+      textarea.focus()
+      return
+    }
     submitButton.innerText = 'Submitting...'
     submitButton.setAttribute('disabled', true)
     instance.post(textarea.value.trim())
@@ -318,19 +319,6 @@ function renderEditor({ user, error }, instance) {
   return container
 }
 
-function renderFooter() {
-  const container = document.createElement('div')
-  container.lang = "en-US"
-  container.className = 'gitment-container gitment-footer-container'
-  container.innerHTML = `
-    Powered by
-    <a class="gitment-footer-project-link" href="https://github.com/imsun/gitment" target="_blank">
-      Gitment
-    </a>
-  `
-  return container
-}
-
 function render(state, instance) {
   const container = document.createElement('div')
   container.lang = "en-US"
@@ -338,8 +326,7 @@ function render(state, instance) {
   container.appendChild(instance.renderHeader(state, instance))
   container.appendChild(instance.renderComments(state, instance))
   container.appendChild(instance.renderEditor(state, instance))
-  container.appendChild(instance.renderFooter(state, instance))
   return container
 }
 
-export default { render, renderHeader, renderComments, renderEditor, renderFooter }
+export default { render, renderHeader, renderComments, renderEditor }
