@@ -66,13 +66,14 @@ function renderComments({ meta, comments, commentReactions, currentPage, user, e
       const initHint = document.createElement('div')
       const initButton = document.createElement('button')
       initButton.className = 'gitment-comments-init-btn'
-      initButton.setAttribute('disabled', true)
-      // auto init
-      instance.init()
-      .catch(e => {
-        initButton.removeAttribute('disabled')
-        alert(e)
-      })
+      initButton.onclick = () => {
+        initButton.setAttribute('disabled', true)
+        instance.init()
+        .catch(e => {
+          initButton.removeAttribute('disabled')
+          alert(e)
+        })
+      }
 
       initButton.innerText = 'Initialize Comments'
       initHint.appendChild(initButton)
